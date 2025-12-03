@@ -22,17 +22,50 @@ int place_figure(struct TetrEntity entity){
 	return 0;
 }
 
+struct TetrBlock get_base_coord(struct TetrEntity entity){
+	struct TetrBlock main_block =  entity.blocks[0];
+	switch(entity.figure){
+		case TFig:
+			if(entity.rotate == Tetr0){
+				return main_block;
+			} else if(rotate == Tetr90){
+				main_block.x ++;
+				main_block.y --;
+				return main_block;
+			} else if(rotate == Tetr180){
+				main_block.x ++;
+				main_block.y ++;
+				return main_block;
+			} else if(rotate == Tetr270){
+				main_block.x ++;
+				return main_block;
+			}
+			break;
+		}
+}
+
 int rotate_figure(struct TetrEntity entity, enum TetrRotate rotate){
+	enum TetrRotate base_rotate;
+	struct TetrBlock base = get_base_coord(entity);
 	switch(entity.figure){
 	case TFig:
 		if(rotate == Tetr0){
-
+			entity.blocks[0] = (struct TetrBlock){BASE_WIDTH, BASE_HEIGHT};
+			entity.blocks[1] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT};
+			entity.blocks[2] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT-1};
+			entity.blocks[3] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT+1};
 		} else if(rotate == Tetr90){
-
+			entity.blocks[0] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT+1};
+			entity.blocks[1] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT};
+			entity.blocks[2] = (struct TetrBlock){BASE_WIDTH, BASE_HEIGHT};
+			entity.blocks[3] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT+1};
 		}
 		break;
 	}
 }
+
+
+
 
 int move_left_figure(struct TetrEntity *entity){
 	unplace_figure(*entity);
