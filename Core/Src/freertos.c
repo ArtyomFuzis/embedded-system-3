@@ -10,18 +10,7 @@
 
 #include "oled.h"
 #include "fonts.h"
-
-
-osThreadId Task_OLEDHandle;
-osThreadId Task_LED1Handle;
-osThreadId Task_LED2Handle;
-osMessageQId myQueue01Handle;
-
-
-
-void StartTaskLED1(void const * argument);
-void StartTasLED2(void const * argument);
-void StartTaskOLED(void const * argument);
+#include "tasks.h"
 
 void MX_FREERTOS_Init(void);
 
@@ -52,6 +41,7 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 void MX_FREERTOS_Init(void) {
   osMessageQDef(myQueue01, 16, uint16_t);
   myQueue01Handle = osMessageCreate(osMessageQ(myQueue01), NULL);
+
   osThreadDef(Task_LED1, StartTaskLED1, osPriorityNormal, 0, 128);
   Task_LED1Handle = osThreadCreate(osThread(Task_LED1), NULL);
 
@@ -62,55 +52,11 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(Task_OLED, StartTaskOLED, osPriorityNormal, 0, 128);
   Task_OLEDHandle = osThreadCreate(osThread(Task_OLED), NULL);
 
+//  osThreadDef(Task_GameTick, StartTaskGameTick, osPriorityNormal, 0, 128);
+//  Task_GameTickHandle = osThreadCreate(osThread(Task_GameTick), NULL);
+
   vQueueAddToRegistry(myQueue01Handle, "queue1");
 
 }
 
-
-void StartTaskOLED(void const * argument)
-{
-  for(;;)
-  {
-    update_time();
-    osDelay(10); // Задержка 10 мс (как было в оригинальном коде)
-  }
-}
-
-void update_time() {
-    oled_SetCursor(20, 10);
-    oled_SetCursor(47, 30);
-    oled_WriteChar('3', Font_7x10, White);
-    oled_WriteChar('3', Font_7x10, White);
-    oled_WriteChar(':', Font_7x10, White);
-    oled_WriteChar('3', Font_7x10, White);
-    oled_WriteChar('3', Font_7x10, White);
-
-    oled_UpdateScreen();
-}
-
-void StartTaskLED1(void const * argument)
-{
-  uint32_t state;
-  for(;;)
-  {
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_15);
-	  if (HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_15) == GPIO_PIN_SET) {
-		  state = 0x01;
-		  osMessagePut(myQueue01Handle, state, 100);
-	  } else {
-		  state = 0x00;
-		  osMessagePut(myQueue01Handle, state, 100);
-	  }
-	  osDelay(500);
-  }
-}
-
-void StartTasLED2(void const * argument)
-{
-  for(;;)
-  {
-	  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);
-	  osDelay(400);
-  }
-}
 

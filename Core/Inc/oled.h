@@ -8,6 +8,7 @@
 #define OLED_I2C_ADDR        0x78
 #define OLED_WIDTH           128
 #define OLED_HEIGHT          64
+#define BLOCK_SIZE 			 4
 
 typedef enum {
 	Black = 0x00,
@@ -33,5 +34,7 @@ void oled_DrawPixel(uint8_t x, uint8_t y, OLED_COLOR color);
 char oled_WriteChar(char ch, FontDef Font, OLED_COLOR color);
 char oled_WriteString(char* str, FontDef Font, OLED_COLOR color);
 void oled_SetCursor(uint8_t x, uint8_t y);
+void oled_DrawBlock(uint8_t x1, uint8_t y1);
+void oled_ClearBlock(uint8_t x1, uint8_t y1);
 
 #endif

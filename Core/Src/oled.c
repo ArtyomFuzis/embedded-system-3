@@ -108,6 +108,25 @@ void oled_DrawSquare(uint8_t x1, uint8_t x2, uint8_t y1, uint8_t y2, OLED_COLOR 
 	oled_DrawVLine(y1, y2, x1, color);
 	oled_DrawVLine(y1, y2, x2, color);
 }
+
+void oled_DrawBlock(uint8_t x1, uint8_t y1) {
+	OLED_COLOR color = White;
+	uint8_t x2 = x1 + BLOCK_SIZE;
+	uint8_t y2 = y1 + BLOCK_SIZE;
+	for(uint8_t xi = x1; xi <= x2; xi++){
+		oled_DrawVLine(y1, y2, xi, color);
+	}
+}
+
+void oled_ClearBlock(uint8_t x1, uint8_t y1) {
+	OLED_COLOR color = Black;
+	uint8_t x2 = x1 + BLOCK_SIZE;
+	uint8_t y2 = y1 + BLOCK_SIZE;
+	for(uint8_t xi = x1; xi <= x2; xi++){
+		oled_DrawVLine(y1, y2, xi, color);
+	}
+}
+
 char oled_WriteChar(char ch, FontDef Font, OLED_COLOR color) {
 	uint32_t i, b, j;
 
