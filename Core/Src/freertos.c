@@ -55,6 +55,9 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(Task_GameTick, StartTaskGameTick, osPriorityNormal, 0, 128);
   Task_GameTickHandle = osThreadCreate(osThread(Task_GameTick), NULL);
 
+  osThreadDef(Task_MoveFigure, StartTaskMoveFigure, osPriorityNormal, 0, 128);
+  Task_MoveFigure = osThreadCreate(osThread(Task_MoveFigure), NULL);
+
   vQueueAddToRegistry(myQueue01Handle, "queue1");
 
 }

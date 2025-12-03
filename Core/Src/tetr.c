@@ -34,7 +34,7 @@ int rotate_figure(struct TetrEntity entity, enum TetrRotate rotate){
 	}
 }
 
-int move_left_figure(struct TetrEntity entity){
+int move_left_figure(struct TetrEntity *entity){
 	unplace_figure(*entity);
 	for(int i = 0 ; i < 4; i++){
 		entity->blocks[i].y--;
@@ -49,7 +49,7 @@ int move_left_figure(struct TetrEntity entity){
 	return res;
 }
 
-int move_right_figure(struct TetrEntity entity){
+int move_right_figure(struct TetrEntity *entity){
 	unplace_figure(*entity);
 	for(int i = 0 ; i < 4; i++){
 		entity->blocks[i].y++;
@@ -136,5 +136,28 @@ struct TetrGenerateReturn generate_figure(){
 		break;
 	}
 	return (struct TetrGenerateReturn){entity,place_figure(entity)};
-}
+}
+
+void move_lines(int ii){
+	for(int i = ii ; i < FIELD_WIDTH-1; i++){
+		for(int j = 2 ; j < FIELD_HEIGHT-2; j ++){
+			field[i][j] = field[i+1][j];
+	    }
+	}
+}
+
+void clear_lines(){
+	for(int i = 2 ; i < FIELD_WIDTH; i++){
+	   int check = 1;
+	   for(int j = 2 ; j < FIELD_HEIGHT-2; j ++){
+		   check *= field[i][j];
+	   }
+	   if(check){
+		   move_lines(i);
+		   i--;
+	   }
+	}
+}
+
+
 

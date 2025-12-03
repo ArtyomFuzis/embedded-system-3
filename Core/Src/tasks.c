@@ -12,12 +12,13 @@
 #include "fonts.h"
 
 #include "tasks.h"
-
+#include "kb.h"
 
 osThreadId Task_OLEDHandle;
 osThreadId Task_LED1Handle;
 osThreadId Task_LED2Handle;
 osThreadId Task_GameTickHandle;
+osThreadId Task_MoveFigure;
 
 osMessageQId myQueue01Handle;
 
@@ -82,8 +83,34 @@ void StartTaskGameTick(void const * argument){
 		}
 		fall_state += move_down_figure(&entity);
 		if(fall_state > 3){
+			clear_lines();
 			fall_state = 0;
 		}
 		osDelay(500);
+	}
+}
+
+uint8_t Row[4] = {ROW1, ROW2, ROW3, ROW4};
+
+void StartTaskMoveFigure(void const * argument){
+	for(;;)
+	{
+		if(!fall_state){
+			continue;
+		}
+		uint8_t  cur_key = Check_Row(Row[0]);
+		if(cur_key == 0x04){
+			move_left_figure(&entity);
+		}
+		cur_key = Check_Row(Row[2]);
+		if(cur_key == 0x04){
+			move_right_figure(&entity);
+		}
+		cur_key = Check_Row(Row[1]);
+		if(cur_key == 0x04){
+			move_down_figure(&entity);
+		}
+
+		osDelay(40);
 	}
 }

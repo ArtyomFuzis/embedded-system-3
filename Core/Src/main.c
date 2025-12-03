@@ -21,7 +21,7 @@ int main(void)
 
 
   MX_GPIO_Init();
-  MX_USART1_UART_Init();
+  MX_USART6_UART_Init();
   MX_I2C1_Init();
 
   oled_Init();
