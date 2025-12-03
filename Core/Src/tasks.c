@@ -69,22 +69,21 @@ void StartTasLED2(void const * argument)
   }
 }
 
+
+int fall_state = 0;
+struct TetrEntity entity;
 void StartTaskGameTick(void const * argument){
 	for(;;)
 	{
-		field[BASE_WIDTH][BASE_HEIGHT] = 0x0;
-		field[BASE_WIDTH-1][BASE_HEIGHT] = 0x0;
-		field[BASE_WIDTH-2][BASE_HEIGHT] = 0x0;
-		field[BASE_WIDTH-3][BASE_HEIGHT] = 0x0;
-		field[BASE_WIDTH][BASE_HEIGHT+1] = 0x0;
-		field[BASE_WIDTH-1][BASE_HEIGHT+1] = 0x0;
-		field[BASE_WIDTH-2][BASE_HEIGHT+1] = 0x0;
-		field[BASE_WIDTH-3][BASE_HEIGHT+1] = 0x0;
-		field[BASE_WIDTH][BASE_HEIGHT-1] = 0x0;
-		field[BASE_WIDTH-1][BASE_HEIGHT-1] = 0x0;
-		field[BASE_WIDTH-2][BASE_HEIGHT-1] = 0x0;
-		field[BASE_WIDTH-3][BASE_HEIGHT-1] = 0x0;
-		generateFigure();
-		osDelay(2000);
+		if(!fall_state) {
+			struct TetrGenerateReturn res = generate_figure();
+			entity = res.entity;
+			fall_state = 1;
+		}
+		fall_state += move_down_figure(&entity);
+		if(fall_state > 3){
+			fall_state = 0;
+		}
+		osDelay(500);
 	}
 }

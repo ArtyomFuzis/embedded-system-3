@@ -35,7 +35,14 @@ struct TetrEntity{
 	struct TetrBlock blocks [4];
 };
 
+struct TetrGenerateReturn{
+	struct TetrEntity entity;
+	int result;
+};
 
-int generateFigure();
+
+struct TetrGenerateReturn generate_figure();
+int move_down_figure(struct TetrEntity *entity);
+
 
 #endif
