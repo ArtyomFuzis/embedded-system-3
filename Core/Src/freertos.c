@@ -52,8 +52,8 @@ void MX_FREERTOS_Init(void) {
   osThreadDef(Task_OLED, StartTaskOLED, osPriorityNormal, 0, 128);
   Task_OLEDHandle = osThreadCreate(osThread(Task_OLED), NULL);
 
-//  osThreadDef(Task_GameTick, StartTaskGameTick, osPriorityNormal, 0, 128);
-//  Task_GameTickHandle = osThreadCreate(osThread(Task_GameTick), NULL);
+  osThreadDef(Task_GameTick, StartTaskGameTick, osPriorityNormal, 0, 128);
+  Task_GameTickHandle = osThreadCreate(osThread(Task_GameTick), NULL);
 
   vQueueAddToRegistry(myQueue01Handle, "queue1");
 

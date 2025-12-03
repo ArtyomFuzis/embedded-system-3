@@ -6,7 +6,7 @@
 
 #include "usart.h"
 #include <string.h>
-#include <stdlib.h>
+#include "tetr.h"
 
 #include "oled.h"
 #include "fonts.h"
@@ -21,15 +21,6 @@ osThreadId Task_GameTickHandle;
 
 osMessageQId myQueue01Handle;
 
-void StartTaskOLED(void const * argument)
-{
-  for(;;)
-  {
-    update_time();
-    osDelay(10); // Задержка 10 мс (как было в оригинальном коде)
-  }
-}
-
 void update_time() {
 	for(int i = 0 ; i < FIELD_WIDTH; i++){
 		for(int j = 0 ; j < FIELD_HEIGHT; j++){
@@ -40,6 +31,17 @@ void update_time() {
 
     oled_UpdateScreen();
 }
+
+void StartTaskOLED(void const * argument)
+{
+  for(;;)
+  {
+    update_time();
+    osDelay(10); // Задержка 10 мс (как было в оригинальном коде)
+  }
+}
+
+
 
 void StartTaskLED1(void const * argument)
 {
@@ -68,5 +70,21 @@ void StartTasLED2(void const * argument)
 }
 
 void StartTaskGameTick(void const * argument){
-
+	for(;;)
+	{
+		field[BASE_WIDTH][BASE_HEIGHT] = 0x0;
+		field[BASE_WIDTH-1][BASE_HEIGHT] = 0x0;
+		field[BASE_WIDTH-2][BASE_HEIGHT] = 0x0;
+		field[BASE_WIDTH-3][BASE_HEIGHT] = 0x0;
+		field[BASE_WIDTH][BASE_HEIGHT+1] = 0x0;
+		field[BASE_WIDTH-1][BASE_HEIGHT+1] = 0x0;
+		field[BASE_WIDTH-2][BASE_HEIGHT+1] = 0x0;
+		field[BASE_WIDTH-3][BASE_HEIGHT+1] = 0x0;
+		field[BASE_WIDTH][BASE_HEIGHT-1] = 0x0;
+		field[BASE_WIDTH-1][BASE_HEIGHT-1] = 0x0;
+		field[BASE_WIDTH-2][BASE_HEIGHT-1] = 0x0;
+		field[BASE_WIDTH-3][BASE_HEIGHT-1] = 0x0;
+		generateFigure();
+		osDelay(2000);
+	}
 }
