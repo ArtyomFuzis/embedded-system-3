@@ -45,6 +45,8 @@ struct TetrGenerateReturn generate_figure();
 int move_down_figure(struct TetrEntity *entity);
 int move_left_figure(struct TetrEntity *entity);
 int move_right_figure(struct TetrEntity *entity);
+int rotate_figure_right(struct TetrEntity *entity);
+int rotate_figure_left(struct TetrEntity *entity);
 void clear_lines();
 
 #endif

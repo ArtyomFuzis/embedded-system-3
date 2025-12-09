@@ -101,10 +101,14 @@ void StartTaskMoveFigure(void const * argument){
 		uint8_t  cur_key = Check_Row(Row[0]);
 		if(cur_key == 0x04){
 			move_left_figure(&entity);
+		} else if(cur_key == 0x02){
+			rotate_figure_left(&entity);
 		}
 		cur_key = Check_Row(Row[2]);
 		if(cur_key == 0x04){
 			move_right_figure(&entity);
+		} else if(cur_key == 0x02){
+			rotate_figure_right(&entity);
 		}
 		cur_key = Check_Row(Row[1]);
 		if(cur_key == 0x04){

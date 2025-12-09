@@ -28,40 +28,85 @@ struct TetrBlock get_base_coord(struct TetrEntity entity){
 		case TFig:
 			if(entity.rotate == Tetr0){
 				return main_block;
-			} else if(rotate == Tetr90){
-				main_block.x ++;
+			} else if(entity.rotate == Tetr90){
 				main_block.y --;
 				return main_block;
-			} else if(rotate == Tetr180){
+			} else if(entity.rotate == Tetr180){
 				main_block.x ++;
-				main_block.y ++;
 				return main_block;
-			} else if(rotate == Tetr270){
-				main_block.x ++;
+			} else if(entity.rotate == Tetr270){
+				main_block.y ++;
 				return main_block;
 			}
 			break;
 		}
 }
 
-int rotate_figure(struct TetrEntity entity, enum TetrRotate rotate){
-	enum TetrRotate base_rotate;
-	struct TetrBlock base = get_base_coord(entity);
-	switch(entity.figure){
+int rotate_figure(struct TetrEntity *entity, enum TetrRotate rotate){
+	struct TetrBlock base = get_base_coord(*entity);
+	switch(entity->figure){
 	case TFig:
 		if(rotate == Tetr0){
-			entity.blocks[0] = (struct TetrBlock){BASE_WIDTH, BASE_HEIGHT};
-			entity.blocks[1] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT};
-			entity.blocks[2] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT-1};
-			entity.blocks[3] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT+1};
+			entity->blocks[0] = (struct TetrBlock){base.x, base.y};
+			entity->blocks[1] = (struct TetrBlock){base.x-1, base.y};
+			entity->blocks[2] = (struct TetrBlock){base.x-1, base.y-1};
+			entity->blocks[3] = (struct TetrBlock){base.x-1, base.y+1};
 		} else if(rotate == Tetr90){
-			entity.blocks[0] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT+1};
-			entity.blocks[1] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT};
-			entity.blocks[2] = (struct TetrBlock){BASE_WIDTH, BASE_HEIGHT};
-			entity.blocks[3] = (struct TetrBlock){BASE_WIDTH-1, BASE_HEIGHT+1};
+			entity->blocks[0] = (struct TetrBlock){base.x, base.y+1};
+			entity->blocks[1] = (struct TetrBlock){base.x, base.y};
+			entity->blocks[2] = (struct TetrBlock){base.x+1, base.y};
+			entity->blocks[3] = (struct TetrBlock){base.x-1, base.y};
+		} else if(rotate == Tetr180){
+			entity->blocks[0] = (struct TetrBlock){base.x-1, base.y};
+			entity->blocks[1] = (struct TetrBlock){base.x, base.y};
+			entity->blocks[2] = (struct TetrBlock){base.x, base.y+1};
+			entity->blocks[3] = (struct TetrBlock){base.x, base.y-1};
+		} else if(rotate == Tetr270){
+			entity->blocks[0] = (struct TetrBlock){base.x, base.y-1};
+			entity->blocks[1] = (struct TetrBlock){base.x, base.y};
+			entity->blocks[2] = (struct TetrBlock){base.x-1, base.y};
+			entity->blocks[3] = (struct TetrBlock){base.x+1, base.y};
 		}
 		break;
 	}
+}
+
+enum TetrRotate getNextRotate(enum TetrRotate rotate){
+	if(rotate == Tetr0)return Tetr90;
+	if(rotate == Tetr90)return Tetr180;
+	if(rotate == Tetr180)return Tetr270;
+	if(rotate == Tetr270)return Tetr0;
+	return Tetr0;
+}
+
+enum TetrRotate getPreviousRotate(enum TetrRotate rotate){
+	if(rotate == Tetr0)return Tetr270;
+	if(rotate == Tetr90)return Tetr180;
+	if(rotate == Tetr180)return Tetr90;
+	if(rotate == Tetr270)return Tetr0;
+	return Tetr0;
+}
+
+int rotate_figure_left(struct TetrEntity *entity){
+	unplace_figure(*entity);
+	rotate_figure(entity, getNextRotate(entity->rotate));
+	int res = place_figure(*entity);
+	if(res){
+		rotate_figure(entity, getPreviousRotate(entity->rotate));
+		place_figure(*entity);
+	}
+	return res;
+}
+
+int rotate_figure_right(struct TetrEntity *entity){
+	unplace_figure(*entity);
+	rotate_figure(entity, getPreviousRotate(entity->rotate));
+	int res = place_figure(*entity);
+	if(res){
+		rotate_figure(entity, getNextRotate(entity->rotate));
+		place_figure(*entity);
+	}
+	return res;
 }
 
 
